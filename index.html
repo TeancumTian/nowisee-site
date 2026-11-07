@@ -1,5 +1,574 @@
 <!DOCTYPE html>
-<html lang="zh-Hans"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>原来如此 · Now I See</title>
-<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#F7F3EC;color:#1D1B18;font:18px/1.7 -apple-system,"PingFang SC",sans-serif;text-align:center;padding:24px}h1{font-family:"Songti SC",Georgia,serif;font-size:48px;margin:0}p{color:#5F5A52}a{color:#3D4FD8}</style>
-</head><body><main><h1>原来如此</h1><p>近现代科技百科全书 · An Illustrated Encyclopedia of Modern Technology</p><p>即将上架 App Store · Coming soon · <a href="https://teancum.me/nowisee-support/">支持 Support</a></p></main></body></html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // 按系统语言选版本：中文系统看中文，其他看英文；用户在顶栏切过就照他选的
+  (function () {
+    var pref = null;
+    try { pref = localStorage.getItem('nis.lang'); } catch (e) {}
+    var sys = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    var want = pref || (/^zh/i.test(sys) ? 'zh' : 'en');
+    if (want !== 'zh') location.replace('en/' + location.hash);
+  })();
+</script>
+<title>原来如此 — 近现代科技百科全书：读懂每项技术为什么行得通</title>
+<meta name="description" content="「原来如此」iPhone / iPad App：从蒸汽机到大语言模型，997 个词条、59 条第一性原理、183 幅图解、25 个互动实验，中文、英文、中英对照。免费下载，完整版一次买断。">
+<link rel="canonical" href="https://nowisee.myheartand.me/">
+<link rel="alternate" hreflang="zh-Hans" href="https://nowisee.myheartand.me/">
+<link rel="alternate" hreflang="en" href="https://nowisee.myheartand.me/en/">
+<link rel="alternate" hreflang="x-default" href="https://nowisee.myheartand.me/">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#F7F3EC">
+<meta name="apple-itunes-app" content="app-id=6826121062">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nowisee.myheartand.me/">
+<meta property="og:title" content="原来如此 — 近现代科技百科全书：读懂每项技术为什么行得通">
+<meta property="og:description" content="「原来如此」iPhone / iPad App：从蒸汽机到大语言模型，997 个词条、59 条第一性原理、183 幅图解、25 个互动实验，中文、英文、中英对照。免费下载，完整版一次买断。">
+<meta property="og:image" content="https://nowisee.myheartand.me/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #F7F3EC; --surface: #FFFDF9; --sunken: #EFEAE1; --hair: #E4DDD1;
+    --ink: #1D1B18; --ink2: #5F5A52; --ink3: #948D82;
+    --accent: #3D4FD8; --accent-deep: #2C3BB0; --accent-soft: #E6E9FB; --en-bar: #A9B3F2;
+    --gold: #B7862C; --gold-soft: #F7EDD6;
+    --serif: "Songti SC", "STSong", "Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    --songti: "Songti SC", "STSong", "Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    --latin: Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    --wrap: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.75 var(--sans); overflow-x: hidden; }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  .latin { font-family: var(--latin); font-style: italic; color: var(--ink2); }
+  .alt { font-weight: 400; color: var(--ink2); font-style: normal; }
+  .alt[lang="en"] { font-family: var(--latin); font-style: italic; }
+  .alt[lang="zh-Hans"] { font-family: var(--songti); }
+  h1, h2, h3, h4 { font-family: var(--serif); font-weight: 700; line-height: 1.25; margin: 0; letter-spacing: 0.01em; text-wrap: balance; }
+  p, li { text-wrap: pretty; }
+  h2 { font-size: clamp(28px, 4.2vw, 42px); }
+  h2 .alt, h3 .alt { display: block; font-size: 0.48em; margin-top: 8px; letter-spacing: 0; }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 32px; } }
+
+  .bar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--paper) 86%, transparent);
+         backdrop-filter: saturate(1.4) blur(14px); -webkit-backdrop-filter: saturate(1.4) blur(14px);
+         border-bottom: 0.5px solid transparent; transition: border-color .2s; }
+  .bar.scrolled { border-bottom-color: var(--hair); }
+  .bar .wrap { display: flex; align-items: center; gap: 18px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-family: var(--songti); font-weight: 700; font-size: 18px; white-space: nowrap; }
+  .brand img { width: 30px; height: 30px; border-radius: 7px; }
+  .bar nav { display: flex; gap: 22px; margin-left: auto; font-size: 15px; }
+  .bar nav a { color: var(--ink2); text-decoration: none; white-space: nowrap; }
+  .bar nav a:hover { color: var(--ink); }
+  .lang { font-size: 14px; color: var(--ink); text-decoration: none; padding: 5px 10px; border-radius: 99px; box-shadow: inset 0 0 0 1px var(--hair); white-space: nowrap; }
+  .lang:hover { background: var(--surface); }
+  @media (max-width: 900px) { .bar nav { display: none; } .bar .lang { margin-left: auto; } }
+  @media (max-width: 380px) { .brand span { display: none; } }
+
+  .btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 13px 24px; font-weight: 600; font-size: 16px;
+         text-decoration: none; white-space: nowrap; transition: transform .15s, background .15s; }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 6px 18px -8px rgba(61, 79, 216, .6); }
+  .btn-primary:hover { background: var(--accent-deep); }
+  .btn-primary.soon { background: var(--ink); box-shadow: none; cursor: default; }
+  .btn-ghost { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1px var(--hair); }
+  .btn-ghost:hover { background: var(--surface); }
+  .bar .btn { padding: 8px 16px; font-size: 14px; }
+
+  .hero { position: relative; padding: 40px 0 24px; overflow: hidden; }
+  .hero .wrap { display: grid; gap: 28px; align-items: center; position: relative; }
+  .hero-art { position: absolute; inset: 0 0 auto 0; height: 100%; background: url(img/hero-home.jpg) 72% 30% / cover no-repeat; opacity: .5;
+              -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 30%, #000 78%); mask-image: linear-gradient(90deg, transparent 0%, transparent 30%, #000 78%); }
+  @media (max-width: 899px) { .hero-art { opacity: .22; -webkit-mask-image: linear-gradient(180deg, #000, transparent 70%); mask-image: linear-gradient(180deg, #000, transparent 70%); } }
+  @media (min-width: 900px) { .hero { padding: 72px 0 40px; } .hero .wrap { grid-template-columns: 1.1fr 0.9fr; gap: 40px; } }
+  .eyebrow { display: inline-flex; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; font-size: 13px; color: var(--accent); font-weight: 600; letter-spacing: .04em; }
+  .eyebrow span { background: var(--accent-soft); padding: 3px 10px; border-radius: 99px; }
+  .hero h1 { font-size: clamp(52px, 9vw, 96px); letter-spacing: 0.04em; }
+  .hero .sub { font-size: clamp(19px, 2.4vw, 26px); margin: 10px 0 0; font-family: var(--serif); color: var(--ink2); }
+  .lead { font-size: clamp(18px, 2vw, 21px); line-height: 1.8; margin: 26px 0 0; max-width: 32em; }
+  .lead .q { font-family: var(--serif); color: var(--ink); }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 0; }
+  .fine { margin: 16px 0 0; font-size: 14px; color: var(--ink2); max-width: 36em; }
+  .fine b { color: var(--ink); font-weight: 600; }
+  .hero-visual { display: grid; place-items: center; }
+  .hero-visual .phone { width: min(292px, 66vw); transform: rotate(2.5deg); }
+
+  .phone { margin: 0; aspect-ratio: 600 / 1304; border-radius: 15% / 7%; padding: 3.2%; background: #1D1B18;
+           box-shadow: 0 0 0 1px #3a3633, 0 30px 60px -24px rgba(30, 30, 80, .45), 0 12px 24px -12px rgba(30, 30, 80, .25); }
+  .phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 12.4% / 5.8%; }
+
+  .stats ul { list-style: none; margin: 0; padding: 26px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px 12px;
+              border-top: 0.5px solid var(--hair); border-bottom: 0.5px solid var(--hair); }
+  @media (min-width: 900px) { .stats ul { grid-template-columns: repeat(6, 1fr); } }
+  .stats li { text-align: center; display: grid; gap: 2px; align-content: start; }
+  .stats b { font-family: var(--serif); font-size: clamp(30px, 4vw, 40px); color: var(--accent); line-height: 1.1; }
+  .stats span { font-size: 14px; line-height: 1.4; }
+  .stats .alt { font-size: 12px; }
+
+  .feature { padding: 88px 0 0; }
+  .feature .wrap { display: grid; gap: 36px; align-items: center; }
+  @media (min-width: 900px) { .feature .wrap { grid-template-columns: 1fr 1fr; gap: 64px; } .feature.flip .copy { order: 2; } }
+  .mark { display: inline-grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: var(--accent-soft);
+          color: var(--accent); font-family: var(--songti); font-size: 30px; font-weight: 700; margin-bottom: 18px; }
+  .feature.gold .mark { background: var(--gold-soft); color: var(--gold); }
+  .copy > p { color: var(--ink2); margin: 18px 0 0; max-width: 30em; }
+  .ticks { list-style: none; padding: 0; margin: 22px 0 0; display: grid; gap: 10px; }
+  .ticks li { display: flex; gap: 10px; align-items: flex-start; }
+  .ticks svg { width: 18px; height: 18px; flex: none; margin-top: 5px; color: var(--accent); }
+  .feature.gold .ticks svg { color: var(--gold); }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 6%; max-width: 560px; margin: 0 auto; width: 100%; padding: 0 4% 12%; }
+  .duo .phone:last-child { transform: translateY(12%); }
+
+  .section-head { text-align: center; max-width: 40em; margin: 0 auto 36px; }
+  .section-head p { color: var(--ink2); margin: 16px 0 0; }
+
+  .sample { padding: 96px 0 0; }
+  .page { max-width: 760px; margin: 0 auto; background: var(--surface); border-radius: 24px; padding: clamp(22px, 5vw, 52px);
+          box-shadow: 0 0 0 0.5px var(--hair), 0 30px 60px -40px rgba(30, 30, 80, .35); }
+  .page-head { display: flex; justify-content: space-between; gap: 12px; margin: 0 0 18px; font-size: 13px; color: var(--ink3); }
+  .page h3 { font-size: clamp(26px, 3.4vw, 34px); }
+  .page h3 .alt { font-size: 17px; }
+  .page .def { margin: 18px 0 0; padding: 14px 18px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 14px 14px 0;
+               font-family: var(--serif); font-size: 19px; }
+  .page h4 { font-size: 19px; margin: 28px 0 0; }
+  .alt-inline { font-family: var(--latin); font-style: italic; font-weight: 400; color: var(--ink3); font-size: 15px; margin-left: 6px; }
+  .page p.zh { font-family: var(--songti); font-size: 19px; line-height: 1.9; margin: 12px 0 8px; }
+  .page p.en { font-family: var(--latin); font-size: 17px; line-height: 1.7; margin: 8px 0 0; border-left: 3px solid var(--en-bar); padding-left: 14px; color: #3d3935; }
+  .term { color: var(--accent); border-bottom: 1px dotted currentColor; }
+  .figure { margin: 24px 0 0; }
+  .figure-img { border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 0 0 0.5px var(--hair); padding: 12px; }
+  .figure figcaption { font-size: 13px; color: var(--ink3); margin-top: 10px; }
+
+  .domains { padding: 104px 0 0; }
+  .doms { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
+  .dom { background: var(--surface); border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 0.5px var(--hair); }
+  .dom > img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+  .dom-body { padding: 10px 14px 12px; }
+  .dom h3 { font-size: 17px; }
+  .dom p { margin: 2px 0 0; font-size: 13.5px; color: var(--ink2); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .badge { font-size: 11.5px; padding: 1px 8px; border-radius: 99px; white-space: nowrap; }
+  .badge.free { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .badge.peek { color: var(--ink3); box-shadow: inset 0 0 0 0.5px var(--hair); }
+
+  .labs { padding: 104px 0 0; }
+  .lab-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); }
+  .lab { background: var(--surface); border-radius: 16px; overflow: hidden; box-shadow: 0 0 0 0.5px var(--hair); }
+  .lab img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+  .lab p { margin: 0; padding: 10px 12px 12px; font-size: 14px; line-height: 1.5; }
+
+  .pricing { padding: 104px 0 0; }
+  .plans { display: grid; gap: 18px; max-width: 920px; margin: 0 auto; }
+  @media (min-width: 820px) { .plans { grid-template-columns: 1fr 1fr; } }
+  .plan { background: var(--surface); border-radius: 24px; padding: 28px 26px; box-shadow: 0 0 0 0.5px var(--hair); }
+  .plan.full { box-shadow: 0 0 0 1.5px var(--accent), 0 30px 60px -40px rgba(61, 79, 216, .45); }
+  .plan h3 { font-size: 24px; }
+  .price { font-family: var(--serif); font-size: 40px; font-weight: 700; margin: 10px 0 0; line-height: 1.1; }
+  .price small { display: block; font-family: var(--sans); font-size: 14px; font-weight: 400; color: var(--ink2); margin-top: 6px; }
+  .plan .ticks { font-size: 15.5px; }
+  .always { max-width: 920px; margin: 18px auto 0; font-size: 14.5px; color: var(--ink2); text-align: center; }
+
+  .faq { padding: 104px 0 0; }
+  .faq .list { max-width: 760px; margin: 0 auto; }
+  details { background: var(--surface); border-radius: 18px; padding: 2px 22px; margin: 10px 0; box-shadow: 0 0 0 0.5px var(--hair); }
+  summary { cursor: pointer; font-weight: 600; padding: 16px 0; }
+  details p { margin: 0 0 16px; color: var(--ink2); font-size: 15.5px; }
+  .more { text-align: center; margin: 20px 0 0; font-size: 15px; }
+
+  .closing { padding: 112px 0 0; text-align: center; }
+  .closing img.icon { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 22px; box-shadow: 0 16px 30px -18px rgba(30, 30, 80, .5); }
+  .closing .cta { justify-content: center; margin-top: 28px; }
+  footer { margin-top: 112px; padding: 28px 0 40px; border-top: 0.5px solid var(--hair); font-size: 13.5px; color: var(--ink3); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  footer a { color: var(--ink2); }
+  footer p { margin: 0; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<header class="bar" id="bar">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="apple-touch-icon.png" alt="" width="30" height="30"><span>原来如此</span></a>
+    <nav aria-label="页面导航"><a href="#read">功能</a><a href="#sample">试读</a><a href="#domains">17 个领域</a><a href="#labs">实验</a><a href="#pricing">免费与完整版</a><a href="https://teancum.me/nowisee-support/">支持</a></nav>
+    <a class="lang" href="en/" hreflang="en" lang="en" data-lang="en">EN</a>
+    <a class="btn btn-primary" data-store data-soon="即将上架" href="https://apps.apple.com/app/id6826121062"><span class="store-label">App Store 下载</span></a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-art" aria-hidden="true"></div>
+    <div class="wrap">
+      <div>
+        <p class="eyebrow"><span>iPhone · iPad</span><span>中文 · English · 中英对照</span><span>离线可读</span></p>
+        <h1>原来如此</h1>
+        <p class="sub">近现代科技百科全书 · 1700–2026</p>
+        <p class="lead"><span class="q">灯泡为什么会亮？芯片怎么用开关做加法？大语言模型怎样挑下一个词？</span><br>
+          从蒸汽机到大模型，997 个词条把每项技术追到背后的第一性原理——读完你会说一句：原来如此。</p>
+        <div class="cta">
+          <a class="btn btn-primary" data-store href="https://apps.apple.com/app/id6826121062"><span class="store-label">在 App Store 免费下载</span></a>
+          <a class="btn btn-ghost" href="#sample">先读一条</a>
+        </div>
+        <p class="fine"><b>免费下载</b>，原理、能源 / 电子 / 计算 3 个领域 271 个词条可以读完 · 完整版一次买断 · 无广告，不用注册</p>
+      </div>
+      <div class="hero-visual">
+        <figure class="phone"><img src="img/zh-Hans-01-today.jpg" width="600" height="1304" alt="今日页：今日词条、继续阅读和学习路线" fetchpriority="high" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="全书数字">
+    <div class="wrap"><ul>
+<li><b>17</b><span>个领域</span><i class="alt" lang="en">domains</i></li>
+<li><b>997</b><span>个词条</span><i class="alt" lang="en">entries</i></li>
+<li><b>59</b><span>条第一性原理</span><i class="alt" lang="en">first principles</i></li>
+<li><b>183</b><span>幅矢量图解</span><i class="alt" lang="en">vector diagrams</i></li>
+<li><b>25</b><span>个互动实验</span><i class="alt" lang="en">hands-on labs</i></li>
+<li><b>7</b><span>条学习路线</span><i class="alt" lang="en">learning paths</i></li>
+    </ul></div>
+  </section>
+
+  <section class="feature" id="read">
+    <div class="wrap">
+      <div class="copy">
+        <span class="mark" aria-hidden="true">读</span>
+        <h2>每个词条，都讲到原理<i class="alt" lang="en">Every entry, down to the principle</i></h2>
+        <p>每条都按同一个顺序讲：一句话说清它是什么，再讲原理、怎么工作、年份与人物、改变了什么，最后是常见误解。中文、英文、中英对照随时切换。</p>
+        <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>183 幅矢量图解，中英两版，放大看细节</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>连续阅读：像翻书一样从头读到尾</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>朗读：读到哪段亮到哪段</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>收藏、笔记、阅读进度，支持深色模式</span></li></ul>
+      </div>
+      <div class="duo">
+        <figure class="phone"><img src="img/zh-Hans-02-entry.jpg" width="600" height="1304" alt="词条页：晶体管" loading="lazy" decoding="async"></figure>
+        <figure class="phone"><img src="img/zh-Hans-03-bilingual.jpg" width="600" height="1304" alt="中英对照阅读：蒸汽机" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature flip gold" id="principles">
+    <div class="wrap">
+      <div class="copy">
+        <span class="mark" aria-hidden="true">理</span>
+        <h2>59 条第一性原理<i class="alt" lang="en">The ideas behind every technology</i></h2>
+        <p>能量守恒、反馈、信息与熵、平方—立方定律……看似不相干的发明，用的常常是同几条道理。每条原理都列出用到它的词条，词条里也随时能点回原理。</p>
+        <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>7 组：力与能量、电磁与光、量子与原子、化学与材料、生命、信息与计算、经济与系统</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>交互大事年表、中英文索引、知识关系图</span></li></ul>
+      </div>
+      <div class="duo">
+        <figure class="phone"><img src="img/zh-Hans-06-principles.jpg" width="600" height="1304" alt="第一性原理" loading="lazy" decoding="async"></figure>
+        <figure class="phone"><img src="img/zh-Hans-08-timeline.jpg" width="600" height="1304" alt="大事年表" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="learn">
+    <div class="wrap">
+      <div class="copy">
+        <span class="mark" aria-hidden="true">学</span>
+        <h2>动手试一次，比读十遍记得牢<i class="alt" lang="en">25 hands-on labs</i></h2>
+        <p>25 个互动实验都走「先猜一猜 → 动手验证 → 原理 → 检验一下」；7 条学习路线用生活类比带你入门，复习卡按 1 / 3 / 7 / 15 / 30 天安排，记得更久。</p>
+        <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>11 个入门实验：逻辑门、二进制、欧姆定律、火箭方程、凯撒密码……</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>14 个进阶模拟：神经网络、语言模型、卫星定位、RSA、量子比特……</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>35 节导学小测、错题本、学习热力图</span></li></ul>
+      </div>
+      <div class="duo">
+        <figure class="phone"><img src="img/zh-Hans-05-lab.jpg" width="600" height="1304" alt="进阶实验：大语言模型怎样挑下一个词" loading="lazy" decoding="async"></figure>
+        <figure class="phone"><img src="img/zh-Hans-07-learn.jpg" width="600" height="1304" alt="学习路线和复习" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sample" id="sample">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>先读一条<i class="alt" lang="en">An entry from the book</i></h2>
+        <p>这是「能源与动力」里的一条（免费领域，全文可读）。在 App 里，蓝色的词点一下就能跳到那条原理或词条。</p>
+      </div>
+      <article class="page">
+      <p class="page-head"><span>能源与动力</span><span class="latin">1712</span></p>
+      <h3>蒸汽机<i class="alt" lang="en">Steam engine</i></h3>
+      <p class="def">把烧煤得到的热变成机械功的第一种实用热机，点燃了工业革命。</p>
+      <h4>原理 <span class="alt-inline">Why it works</span></h4>
+      <p class="zh" lang="zh-Hans">水变成蒸汽时体积膨胀约 1700 倍，蒸汽遇冷又会凝结成水、留下真空——让这一胀一缩去推活塞，烧煤的热就变成了机械功（<span class="term">能量守恒</span>、<span class="term">相变</span>）。</p><p class="en" lang="en">When water turns into steam, its volume expands by about 1700 times. When the steam cools, it condenses back into water, leaving a vacuum—this expansion and contraction push the piston, converting the heat from burning coal into mechanical work (<span class="term">conservation of energy</span>, <span class="term">phase change</span>).</p>
+      <figure class="figure">
+        <div class="figure-img"><img src="img/figure-zh.jpg" alt="蒸汽机" loading="lazy" decoding="async"></div>
+        <figcaption>瓦特蒸汽机的关键：锅炉产生蒸汽推动活塞，用过的蒸汽被送进独立的冷凝器变回水，气缸始终保持高温。</figcaption>
+      </figure>
+      </article>
+    </div>
+  </section>
+
+  <section class="domains" id="domains">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>17 个领域<i class="alt" lang="en">17 domains</i></h2>
+        <p>从能源、电子、计算到航天、生物医学、材料和量子前沿。标「全文免费」的领域不用买就能读完，其余领域的每个词条都能试读开头。</p>
+      </div>
+      <div class="doms">
+        <article class="dom">
+          <img src="img/domain-energy.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>能源与动力</h3>
+            <p>68 个词条 <span class="badge free">全文免费</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-electronics.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>电与电子</h3>
+            <p>79 个词条 <span class="badge free">全文免费</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-computing.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>计算与软件</h3>
+            <p>124 个词条 <span class="badge free">全文免费</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-internet.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>互联网与通信</h3>
+            <p>83 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-ai.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>人工智能</h3>
+            <p>81 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-materials.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>材料与化工</h3>
+            <p>54 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-manufacturing.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>制造与自动化</h3>
+            <p>45 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-transport.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>交通运输</h3>
+            <p>51 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-space.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>航天与空间</h3>
+            <p>39 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-biomed.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>生物与医学</h3>
+            <p>107 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-agri.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>农业与食品</h3>
+            <p>34 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-building.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>建筑与城市</h3>
+            <p>34 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-security.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>安全与国防</h3>
+            <p>48 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-fintech.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>金融与商业科技</h3>
+            <p>37 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-environment.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>环境与气候技术</h3>
+            <p>36 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-media.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>光学、成像与媒体</h3>
+            <p>47 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="img/domain-frontier.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>量子与前沿</h3>
+            <p>30 个词条 <span class="badge peek">可试读</span></p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="labs" id="labs">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>14 个进阶模拟<i class="alt" lang="en">plus 11 starter labs</i></h2>
+        <p>每个都有一个纯计算的模型和单元测试，数字是算出来的，不是画出来的。</p>
+      </div>
+      <div class="lab-grid">
+        <article class="lab">
+          <img src="img/lab-neuron.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>神经网络怎样学会分类？ <span class="badge free">免费</span></p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-tokens.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>大语言模型怎样挑下一个词？ </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-orbit.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>要多快，才不会掉下来？ <span class="badge free">免费</span></p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-gnss.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>卫星怎样知道你在哪？ </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-rsa.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>把锁公开，钥匙却留在手里 </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-blockchain.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>改一个字，整条链都会报警？ </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-sampling.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>一秒钟要拍多少张“快照”？ </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-compression.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>常用的字，用更短的码 </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-epidemic.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>疫苗为什么也保护没打的人？ </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-greenhouse.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>地球为什么不是零下 18 度？ </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-pid.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>怎样让无人机稳稳悬停？ </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-wing.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>机翼怎样托起一架飞机？ </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-qubit.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>既是 0 又是 1，是什么意思？ </p>
+        </article>
+        <article class="lab">
+          <img src="img/lab-fission.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>怎样让链式反应不多不少？ </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>先读，再决定<i class="alt" lang="en">Free to start, one purchase for everything</i></h2>
+        <p>下载免费。觉得有用，再一次买下整部百科——不是订阅，不会自动续费。</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>免费</h3>
+          <p class="price">$0<small>下载就能读，不用注册</small></p>
+          <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>59 条第一性原理、导读和资料来源</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>能源与动力、电与电子、计算与软件 3 个领域的 271 个词条全文</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>其余每个词条：试读「一句话」定义和正文第一部分</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>13 个实验：11 个入门实验，加上「神经网络怎样学会分类？」和「要多快，才不会掉下来？」</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>全部学习路线、导学小测和复习卡</span></li></ul>
+        </div>
+        <div class="plan full">
+          <h3>完整版</h3>
+          <p class="price">$4.99<small>一次买断，不是订阅 · 各地区以 App Store 显示的当地价格为准</small></p>
+          <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>全部 17 个领域、997 个词条全文</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>全部 183 幅图解</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>全部 25 个实验，含 14 个进阶模拟</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>支持家人共享；iPhone 和 iPad 买一次都能用</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>换设备后「恢复购买」，不会重复扣费</span></li></ul>
+        </div>
+      </div>
+      <p class="always">始终免费：学习路线、导学小测、复习卡、全文搜索、年表、索引、知识关系图、收藏和笔记，能读到的部分都能朗读。</p>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <div class="section-head"><h2>常见问题<i class="alt" lang="en">FAQ</i></h2></div>
+      <div class="list">
+        <details><summary>需要什么设备？</summary><p>iPhone 或 iPad，系统需要 iOS / iPadOS 26 或更新版本。界面和正文都可以是中文或英文，也可以中英对照。</p></details>
+        <details><summary>要联网、要注册吗？</summary><p>都不用。全部内容装在 App 里，离线可读，没有广告，不收集任何数据。学习记录只保存在你的设备上，可以导出备份。</p></details>
+        <details><summary>书里的数字可靠吗？</summary><p>每个领域都附一篇「资料来源与核实记录」，列出关键数字和年份的出处。发现错误欢迎告诉我们。</p></details>
+        <details><summary>换了设备，买过的完整版还在吗？</summary><p>在。用同一个 Apple 账户登录，打开「设置 → 完整版 → 恢复购买」即可；家人共享里的家庭成员也能用。</p></details>
+      </div>
+      <p class="more">更多问题请看 <a href="https://teancum.me/nowisee-support/">支持页</a>，或写信到 <a href="mailto:dongxiyunei@gmail.com">dongxiyunei@gmail.com</a></p>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap">
+      <img class="icon" src="icon-192.png" width="96" height="96" alt="原来如此 App 图标" loading="lazy">
+      <h2>把三百年的发明装进口袋<i class="alt" lang="en">Three centuries of invention, in your pocket</i></h2>
+      <div class="cta">
+        <a class="btn btn-primary" data-store href="https://apps.apple.com/app/id6826121062"><span class="store-label">在 App Store 免费下载</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Teancum Tian · 原来如此 · 近现代科技百科全书</p>
+    <nav aria-label="页脚"><a href="https://teancum.me/nowisee-support/">支持</a><a href="https://teancum.me/nowisee-support/privacy.html">隐私政策</a><a href="https://teancum.me/nowisee-support/terms.html">使用条款</a><a href="mailto:dongxiyunei@gmail.com">联系我们</a></nav>
+  </div>
+</footer>
+
+<script>
+  const bar = document.getElementById('bar');
+  addEventListener('scroll', () => bar.classList.toggle('scrolled', scrollY > 8), { passive: true });
+  document.querySelectorAll('[data-lang]').forEach(a => a.addEventListener('click', () => {
+    try { localStorage.setItem('nis.lang', a.dataset.lang); } catch (e) {}
+  }));
+  // 还没上架时 App Store 查不到这个 App：按钮改成「即将上架」，上架以后自动变回下载链接
+  function nisLookup(r) {
+    if (r && r.resultCount > 0) return;
+    document.querySelectorAll('[data-store]').forEach(a => {
+      a.classList.add('soon');
+      a.removeAttribute('href');
+      a.querySelector('.store-label').textContent = a.dataset.soon || '即将上架 App Store';
+    });
+  }
+</script>
+<script src="https://itunes.apple.com/lookup?id=6826121062&callback=nisLookup" async></script>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // 按系统语言选版本：中文系统看中文，其他看英文；用户在顶栏切过就照他选的
+  (function () {
+    var pref = null;
+    try { pref = localStorage.getItem('nis.lang'); } catch (e) {}
+    var sys = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    var want = pref || (/^zh/i.test(sys) ? 'zh' : 'en');
+    if (want !== 'en') location.replace('../' + location.hash);
+  })();
+</script>
+<title>Now I See — an illustrated encyclopedia of modern technology</title>
+<meta name="description" content="An iPhone and iPad app that explains why technology works — from the steam engine to large language models. 997 entries, 59 first principles, 183 diagrams and 25 hands-on labs, in English, Chinese or both. Free to download; unlock everything with a one-time purchase.">
+<link rel="canonical" href="https://nowisee.myheartand.me/en/">
+<link rel="alternate" hreflang="zh-Hans" href="https://nowisee.myheartand.me/">
+<link rel="alternate" hreflang="en" href="https://nowisee.myheartand.me/en/">
+<link rel="alternate" hreflang="x-default" href="https://nowisee.myheartand.me/">
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#F7F3EC">
+<meta name="apple-itunes-app" content="app-id=6826121062">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nowisee.myheartand.me/en/">
+<meta property="og:title" content="Now I See — an illustrated encyclopedia of modern technology">
+<meta property="og:description" content="An iPhone and iPad app that explains why technology works — from the steam engine to large language models. 997 entries, 59 first principles, 183 diagrams and 25 hands-on labs, in English, Chinese or both. Free to download; unlock everything with a one-time purchase.">
+<meta property="og:image" content="https://nowisee.myheartand.me/img/og-en.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #F7F3EC; --surface: #FFFDF9; --sunken: #EFEAE1; --hair: #E4DDD1;
+    --ink: #1D1B18; --ink2: #5F5A52; --ink3: #948D82;
+    --accent: #3D4FD8; --accent-deep: #2C3BB0; --accent-soft: #E6E9FB; --en-bar: #A9B3F2;
+    --gold: #B7862C; --gold-soft: #F7EDD6;
+    --serif: Georgia, "Times New Roman", "Songti SC", "Noto Serif SC", serif;
+    --songti: "Songti SC", "STSong", "Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    --latin: Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    --wrap: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.75 var(--sans); overflow-x: hidden; }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  .latin { font-family: var(--latin); font-style: italic; color: var(--ink2); }
+  .alt { font-weight: 400; color: var(--ink2); font-style: normal; }
+  .alt[lang="en"] { font-family: var(--latin); font-style: italic; }
+  .alt[lang="zh-Hans"] { font-family: var(--songti); }
+  h1, h2, h3, h4 { font-family: var(--serif); font-weight: 700; line-height: 1.25; margin: 0; letter-spacing: 0.01em; text-wrap: balance; }
+  p, li { text-wrap: pretty; }
+  h2 { font-size: clamp(28px, 4.2vw, 42px); }
+  h2 .alt, h3 .alt { display: block; font-size: 0.48em; margin-top: 8px; letter-spacing: 0; }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 32px; } }
+
+  .bar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--paper) 86%, transparent);
+         backdrop-filter: saturate(1.4) blur(14px); -webkit-backdrop-filter: saturate(1.4) blur(14px);
+         border-bottom: 0.5px solid transparent; transition: border-color .2s; }
+  .bar.scrolled { border-bottom-color: var(--hair); }
+  .bar .wrap { display: flex; align-items: center; gap: 18px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-family: var(--songti); font-weight: 700; font-size: 18px; white-space: nowrap; }
+  .brand img { width: 30px; height: 30px; border-radius: 7px; }
+  .bar nav { display: flex; gap: 22px; margin-left: auto; font-size: 15px; }
+  .bar nav a { color: var(--ink2); text-decoration: none; white-space: nowrap; }
+  .bar nav a:hover { color: var(--ink); }
+  .lang { font-size: 14px; color: var(--ink); text-decoration: none; padding: 5px 10px; border-radius: 99px; box-shadow: inset 0 0 0 1px var(--hair); white-space: nowrap; }
+  .lang:hover { background: var(--surface); }
+  @media (max-width: 900px) { .bar nav { display: none; } .bar .lang { margin-left: auto; } }
+  @media (max-width: 380px) { .brand span { display: none; } }
+
+  .btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 13px 24px; font-weight: 600; font-size: 16px;
+         text-decoration: none; white-space: nowrap; transition: transform .15s, background .15s; }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 6px 18px -8px rgba(61, 79, 216, .6); }
+  .btn-primary:hover { background: var(--accent-deep); }
+  .btn-primary.soon { background: var(--ink); box-shadow: none; cursor: default; }
+  .btn-ghost { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1px var(--hair); }
+  .btn-ghost:hover { background: var(--surface); }
+  .bar .btn { padding: 8px 16px; font-size: 14px; }
+
+  .hero { position: relative; padding: 40px 0 24px; overflow: hidden; }
+  .hero .wrap { display: grid; gap: 28px; align-items: center; position: relative; }
+  .hero-art { position: absolute; inset: 0 0 auto 0; height: 100%; background: url(../img/hero-home.jpg) 72% 30% / cover no-repeat; opacity: .5;
+              -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 30%, #000 78%); mask-image: linear-gradient(90deg, transparent 0%, transparent 30%, #000 78%); }
+  @media (max-width: 899px) { .hero-art { opacity: .22; -webkit-mask-image: linear-gradient(180deg, #000, transparent 70%); mask-image: linear-gradient(180deg, #000, transparent 70%); } }
+  @media (min-width: 900px) { .hero { padding: 72px 0 40px; } .hero .wrap { grid-template-columns: 1.1fr 0.9fr; gap: 40px; } }
+  .eyebrow { display: inline-flex; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; font-size: 13px; color: var(--accent); font-weight: 600; letter-spacing: .04em; }
+  .eyebrow span { background: var(--accent-soft); padding: 3px 10px; border-radius: 99px; }
+  .hero h1 { font-size: clamp(44px, 6vw, 76px); letter-spacing: 0; }
+  .hero .sub { font-size: clamp(19px, 2.4vw, 26px); margin: 10px 0 0; font-family: var(--serif); color: var(--ink2); }
+  .lead { font-size: clamp(18px, 2vw, 21px); line-height: 1.8; margin: 26px 0 0; max-width: 32em; }
+  .lead .q { font-family: var(--serif); color: var(--ink); }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 0; }
+  .fine { margin: 16px 0 0; font-size: 14px; color: var(--ink2); max-width: 36em; }
+  .fine b { color: var(--ink); font-weight: 600; }
+  .hero-visual { display: grid; place-items: center; }
+  .hero-visual .phone { width: min(292px, 66vw); transform: rotate(2.5deg); }
+
+  .phone { margin: 0; aspect-ratio: 600 / 1304; border-radius: 15% / 7%; padding: 3.2%; background: #1D1B18;
+           box-shadow: 0 0 0 1px #3a3633, 0 30px 60px -24px rgba(30, 30, 80, .45), 0 12px 24px -12px rgba(30, 30, 80, .25); }
+  .phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 12.4% / 5.8%; }
+
+  .stats ul { list-style: none; margin: 0; padding: 26px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px 12px;
+              border-top: 0.5px solid var(--hair); border-bottom: 0.5px solid var(--hair); }
+  @media (min-width: 900px) { .stats ul { grid-template-columns: repeat(6, 1fr); } }
+  .stats li { text-align: center; display: grid; gap: 2px; align-content: start; }
+  .stats b { font-family: var(--serif); font-size: clamp(30px, 4vw, 40px); color: var(--accent); line-height: 1.1; }
+  .stats span { font-size: 14px; line-height: 1.4; }
+  .stats .alt { font-size: 12px; }
+
+  .feature { padding: 88px 0 0; }
+  .feature .wrap { display: grid; gap: 36px; align-items: center; }
+  @media (min-width: 900px) { .feature .wrap { grid-template-columns: 1fr 1fr; gap: 64px; } .feature.flip .copy { order: 2; } }
+  .mark { display: inline-grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: var(--accent-soft);
+          color: var(--accent); font-family: var(--songti); font-size: 30px; font-weight: 700; margin-bottom: 18px; }
+  .feature.gold .mark { background: var(--gold-soft); color: var(--gold); }
+  .copy > p { color: var(--ink2); margin: 18px 0 0; max-width: 30em; }
+  .ticks { list-style: none; padding: 0; margin: 22px 0 0; display: grid; gap: 10px; }
+  .ticks li { display: flex; gap: 10px; align-items: flex-start; }
+  .ticks svg { width: 18px; height: 18px; flex: none; margin-top: 5px; color: var(--accent); }
+  .feature.gold .ticks svg { color: var(--gold); }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 6%; max-width: 560px; margin: 0 auto; width: 100%; padding: 0 4% 12%; }
+  .duo .phone:last-child { transform: translateY(12%); }
+
+  .section-head { text-align: center; max-width: 40em; margin: 0 auto 36px; }
+  .section-head p { color: var(--ink2); margin: 16px 0 0; }
+
+  .sample { padding: 96px 0 0; }
+  .page { max-width: 760px; margin: 0 auto; background: var(--surface); border-radius: 24px; padding: clamp(22px, 5vw, 52px);
+          box-shadow: 0 0 0 0.5px var(--hair), 0 30px 60px -40px rgba(30, 30, 80, .35); }
+  .page-head { display: flex; justify-content: space-between; gap: 12px; margin: 0 0 18px; font-size: 13px; color: var(--ink3); }
+  .page h3 { font-size: clamp(26px, 3.4vw, 34px); }
+  .page h3 .alt { font-size: 17px; }
+  .page .def { margin: 18px 0 0; padding: 14px 18px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 14px 14px 0;
+               font-family: var(--serif); font-size: 19px; }
+  .page h4 { font-size: 19px; margin: 28px 0 0; }
+  .alt-inline { font-family: var(--latin); font-style: italic; font-weight: 400; color: var(--ink3); font-size: 15px; margin-left: 6px; }
+  .page p.zh { font-family: var(--songti); font-size: 19px; line-height: 1.9; margin: 12px 0 8px; }
+  .page p.en { font-family: var(--latin); font-size: 17px; line-height: 1.7; margin: 8px 0 0; border-left: 3px solid var(--en-bar); padding-left: 14px; color: #3d3935; }
+  .term { color: var(--accent); border-bottom: 1px dotted currentColor; }
+  .figure { margin: 24px 0 0; }
+  .figure-img { border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 0 0 0.5px var(--hair); padding: 12px; }
+  .figure figcaption { font-size: 13px; color: var(--ink3); margin-top: 10px; }
+
+  .domains { padding: 104px 0 0; }
+  .doms { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
+  .dom { background: var(--surface); border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 0.5px var(--hair); }
+  .dom > img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+  .dom-body { padding: 10px 14px 12px; }
+  .dom h3 { font-size: 17px; }
+  .dom p { margin: 2px 0 0; font-size: 13.5px; color: var(--ink2); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .badge { font-size: 11.5px; padding: 1px 8px; border-radius: 99px; white-space: nowrap; }
+  .badge.free { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .badge.peek { color: var(--ink3); box-shadow: inset 0 0 0 0.5px var(--hair); }
+
+  .labs { padding: 104px 0 0; }
+  .lab-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); }
+  .lab { background: var(--surface); border-radius: 16px; overflow: hidden; box-shadow: 0 0 0 0.5px var(--hair); }
+  .lab img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+  .lab p { margin: 0; padding: 10px 12px 12px; font-size: 14px; line-height: 1.5; }
+
+  .pricing { padding: 104px 0 0; }
+  .plans { display: grid; gap: 18px; max-width: 920px; margin: 0 auto; }
+  @media (min-width: 820px) { .plans { grid-template-columns: 1fr 1fr; } }
+  .plan { background: var(--surface); border-radius: 24px; padding: 28px 26px; box-shadow: 0 0 0 0.5px var(--hair); }
+  .plan.full { box-shadow: 0 0 0 1.5px var(--accent), 0 30px 60px -40px rgba(61, 79, 216, .45); }
+  .plan h3 { font-size: 24px; }
+  .price { font-family: var(--serif); font-size: 40px; font-weight: 700; margin: 10px 0 0; line-height: 1.1; }
+  .price small { display: block; font-family: var(--sans); font-size: 14px; font-weight: 400; color: var(--ink2); margin-top: 6px; }
+  .plan .ticks { font-size: 15.5px; }
+  .always { max-width: 920px; margin: 18px auto 0; font-size: 14.5px; color: var(--ink2); text-align: center; }
+
+  .faq { padding: 104px 0 0; }
+  .faq .list { max-width: 760px; margin: 0 auto; }
+  details { background: var(--surface); border-radius: 18px; padding: 2px 22px; margin: 10px 0; box-shadow: 0 0 0 0.5px var(--hair); }
+  summary { cursor: pointer; font-weight: 600; padding: 16px 0; }
+  details p { margin: 0 0 16px; color: var(--ink2); font-size: 15.5px; }
+  .more { text-align: center; margin: 20px 0 0; font-size: 15px; }
+
+  .closing { padding: 112px 0 0; text-align: center; }
+  .closing img.icon { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 22px; box-shadow: 0 16px 30px -18px rgba(30, 30, 80, .5); }
+  .closing .cta { justify-content: center; margin-top: 28px; }
+  footer { margin-top: 112px; padding: 28px 0 40px; border-top: 0.5px solid var(--hair); font-size: 13.5px; color: var(--ink3); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  footer a { color: var(--ink2); }
+  footer p { margin: 0; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<header class="bar" id="bar">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="../apple-touch-icon.png" alt="" width="30" height="30"><span>Now I See</span></a>
+    <nav aria-label="Page"><a href="#read">Features</a><a href="#sample">Sample</a><a href="#domains">17 domains</a><a href="#labs">Labs</a><a href="#pricing">Free vs. Full</a><a href="https://teancum.me/nowisee-support/">Support</a></nav>
+    <a class="lang" href="../" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh">中文</a>
+    <a class="btn btn-primary" data-store data-soon="Coming soon" href="https://apps.apple.com/app/id6826121062"><span class="store-label">Get the app</span></a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-art" aria-hidden="true"></div>
+    <div class="wrap">
+      <div>
+        <p class="eyebrow"><span>iPhone · iPad</span><span>English · Chinese · both</span><span>Works offline</span></p>
+        <h1>Now I See</h1>
+        <p class="sub">An illustrated encyclopedia of modern technology, 1700–2026</p>
+        <p class="lead"><span class="q">Why does a light bulb glow? How does a chip add with switches? How does a language model pick its next word?</span><br>
+          From the steam engine to large language models, 997 entries trace every technology back to the first principles behind it — until you say: now I see.</p>
+        <div class="cta">
+          <a class="btn btn-primary" data-store href="https://apps.apple.com/app/id6826121062"><span class="store-label">Free on the App Store</span></a>
+          <a class="btn btn-ghost" href="#sample">Read an entry</a>
+        </div>
+        <p class="fine"><b>Free to download</b> — read all the principles and 271 entries on energy, electronics and computing in full · one purchase unlocks everything · no ads, no account</p>
+      </div>
+      <div class="hero-visual">
+        <figure class="phone"><img src="../img/en-US-01-today.jpg" width="600" height="1304" alt="Today: entry of the day, continue reading and learning paths" fetchpriority="high" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="The book in numbers">
+    <div class="wrap"><ul>
+<li><b>17</b><span>domains</span><i class="alt" lang="zh-Hans">个领域</i></li>
+<li><b>997</b><span>entries</span><i class="alt" lang="zh-Hans">个词条</i></li>
+<li><b>59</b><span>first principles</span><i class="alt" lang="zh-Hans">条第一性原理</i></li>
+<li><b>183</b><span>vector diagrams</span><i class="alt" lang="zh-Hans">幅矢量图解</i></li>
+<li><b>25</b><span>hands-on labs</span><i class="alt" lang="zh-Hans">个互动实验</i></li>
+<li><b>7</b><span>learning paths</span><i class="alt" lang="zh-Hans">条学习路线</i></li>
+    </ul></div>
+  </section>
+
+  <section class="feature" id="read">
+    <div class="wrap">
+      <div class="copy">
+        <span class="mark" aria-hidden="true">Rd</span>
+        <h2>Every entry, down to the principle<i class="alt" lang="zh-Hans">每个词条，都讲到原理</i></h2>
+        <p>Every entry follows the same path: what it is in one sentence, then why it works, how it works, when and who, what it changed, and the common misconceptions. Switch between English, Chinese and both at any time.</p>
+        <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>183 vector diagrams in English and Chinese — zoom right in</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>A continuous reader that turns the encyclopedia into a book</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Read-aloud that highlights each paragraph</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Bookmarks, notes, reading progress and dark mode</span></li></ul>
+      </div>
+      <div class="duo">
+        <figure class="phone"><img src="../img/en-US-02-entry.jpg" width="600" height="1304" alt="Entry: the transistor" loading="lazy" decoding="async"></figure>
+        <figure class="phone"><img src="../img/en-US-03-bilingual.jpg" width="600" height="1304" alt="Bilingual reader: the steam engine" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature flip gold" id="principles">
+    <div class="wrap">
+      <div class="copy">
+        <span class="mark" aria-hidden="true">Pr</span>
+        <h2>59 first principles<i class="alt" lang="zh-Hans">把所有技术串成一张网</i></h2>
+        <p>Conservation of energy, feedback, information and entropy, the square–cube law… very different inventions often run on the same few ideas. Each principle lists the entries that use it, and every entry links back to its principles.</p>
+        <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>7 families: force and energy, electromagnetism and light, quantum and atomic, chemistry and materials, life, information and computing, economics and systems</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>An interactive timeline, English and Chinese indexes and a connections graph</span></li></ul>
+      </div>
+      <div class="duo">
+        <figure class="phone"><img src="../img/en-US-06-principles.jpg" width="600" height="1304" alt="First principles" loading="lazy" decoding="async"></figure>
+        <figure class="phone"><img src="../img/en-US-08-timeline.jpg" width="600" height="1304" alt="Timeline" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="learn">
+    <div class="wrap">
+      <div class="copy">
+        <span class="mark" aria-hidden="true">Ln</span>
+        <h2>Learn it by doing it<i class="alt" lang="zh-Hans">动手试一次，比读十遍记得牢</i></h2>
+        <p>All 25 labs follow predict → test → explain → check; 7 learning paths start from everyday analogies, and review cards come back after 1, 3, 7, 15 and 30 days so ideas stick.</p>
+        <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>11 starter labs: logic gates, binary, Ohm's law, the rocket equation, the Caesar cipher…</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>14 advanced simulations: neural networks, language models, satellite positioning, RSA, a qubit…</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>35 lesson quizzes, a mistakes notebook and a study heat map</span></li></ul>
+      </div>
+      <div class="duo">
+        <figure class="phone"><img src="../img/en-US-05-lab.jpg" width="600" height="1304" alt="Advanced lab: how a language model picks the next word" loading="lazy" decoding="async"></figure>
+        <figure class="phone"><img src="../img/en-US-07-learn.jpg" width="600" height="1304" alt="Learning paths and review" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sample" id="sample">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>An entry from the book<i class="alt" lang="zh-Hans">先读一条</i></h2>
+        <p>An entry from Energy & Power — one of the free domains. In the app, the blue terms open the principle or entry they name.</p>
+      </div>
+      <article class="page">
+      <p class="page-head"><span>Energy &amp; Power</span><span class="latin">1712</span></p>
+      <h3>Steam engine<i class="alt" lang="zh-Hans">蒸汽机</i></h3>
+      <p class="def">The first practical heat engine to turn the heat from burning coal into mechanical work, helping launch the Industrial Revolution.</p>
+      <h4>Why it works <span class="alt-inline">原理</span></h4>
+      <p class="en" lang="en">When water turns into steam, its volume expands by about 1700 times. When the steam cools, it condenses back into water, leaving a vacuum—this expansion and contraction push the piston, converting the heat from burning coal into mechanical work (<span class="term">conservation of energy</span>, <span class="term">phase change</span>).</p><p class="zh" lang="zh-Hans">水变成蒸汽时体积膨胀约 1700 倍，蒸汽遇冷又会凝结成水、留下真空——让这一胀一缩去推活塞，烧煤的热就变成了机械功（<span class="term">能量守恒</span>、<span class="term">相变</span>）。</p>
+      <figure class="figure">
+        <div class="figure-img"><img src="../img/figure-en.jpg" alt="Steam engine" loading="lazy" decoding="async"></div>
+        <figcaption>Key feature of Watt's steam engine: the boiler produces steam to push the piston, while used steam is sent to a separate condenser to turn back into water, keeping the cylinder hot at all times.</figcaption>
+      </figure>
+      </article>
+    </div>
+  </section>
+
+  <section class="domains" id="domains">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>17 domains<i class="alt" lang="zh-Hans">17 个领域</i></h2>
+        <p>From energy, electronics and computing to spaceflight, biomedicine, materials and the quantum frontier. Domains marked Free can be read in full without buying; every entry in the others opens with a preview.</p>
+      </div>
+      <div class="doms">
+        <article class="dom">
+          <img src="../img/domain-energy.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Energy &amp; Power</h3>
+            <p>68 entries <span class="badge free">Free</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-electronics.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Electricity &amp; Electronics</h3>
+            <p>79 entries <span class="badge free">Free</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-computing.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Computing &amp; Software</h3>
+            <p>124 entries <span class="badge free">Free</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-internet.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Internet &amp; Telecommunications</h3>
+            <p>83 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-ai.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Artificial Intelligence</h3>
+            <p>81 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-materials.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Materials &amp; Chemical Industry</h3>
+            <p>54 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-manufacturing.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Manufacturing &amp; Automation</h3>
+            <p>45 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-transport.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Transportation</h3>
+            <p>51 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-space.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Spaceflight &amp; Space Technology</h3>
+            <p>39 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-biomed.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Biology &amp; Medicine</h3>
+            <p>107 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-agri.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Agriculture &amp; Food</h3>
+            <p>34 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-building.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Buildings &amp; Cities</h3>
+            <p>34 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-security.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Security &amp; Defense</h3>
+            <p>48 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-fintech.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Finance &amp; Commerce Technology</h3>
+            <p>37 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-environment.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Environment &amp; Climate Technology</h3>
+            <p>36 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-media.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Optics, Imaging &amp; Media</h3>
+            <p>47 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+        <article class="dom">
+          <img src="../img/domain-frontier.jpg" width="640" height="427" alt="" loading="lazy" decoding="async">
+          <div class="dom-body">
+            <h3>Quantum &amp; Frontier Technologies</h3>
+            <p>30 entries <span class="badge peek">Preview</span></p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="labs" id="labs">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>14 advanced simulations<i class="alt" lang="zh-Hans">还有 11 个入门实验</i></h2>
+        <p>Each runs on a small, unit-tested model — the numbers are computed, not drawn.</p>
+      </div>
+      <div class="lab-grid">
+        <article class="lab">
+          <img src="../img/lab-neuron.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>How does a neural network learn to sort points? <span class="badge free">Free</span></p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-tokens.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>How does a language model pick the next word? </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-orbit.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>How fast before you stop falling? <span class="badge free">Free</span></p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-gnss.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>How do satellites tell you where you are? </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-rsa.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>Publish the lock, keep the key </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-blockchain.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>Change one letter and the whole chain notices? </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-sampling.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>How many snapshots per second does sound need? </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-compression.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>Shorter codes for common symbols </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-epidemic.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>Why do vaccines protect people who aren&#x27;t vaccinated? </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-greenhouse.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>Why isn&#x27;t Earth at −18 °C? </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-pid.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>How do you make a drone hover steadily? </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-wing.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>How does a wing hold up an airplane? </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-qubit.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>What does it mean to be 0 and 1 at once? </p>
+        </article>
+        <article class="lab">
+          <img src="../img/lab-fission.jpg" width="480" height="320" alt="" loading="lazy" decoding="async">
+          <p>How do you keep a chain reaction just right? </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Start free, buy once<i class="alt" lang="zh-Hans">先读，再决定</i></h2>
+        <p>The download is free. If you like it, buy the whole encyclopedia once — it's not a subscription and never renews.</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Free</h3>
+          <p class="price">$0<small>Start reading right after you download — no account</small></p>
+          <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>All 59 first principles, the introductions and the source notes</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>271 entries in full: Energy &amp; Power, Electricity &amp; Electronics, Computing &amp; Software</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Every other entry: the one-line definition and first section</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>13 labs: 11 starter labs, plus “How does a neural network learn to sort points?” and “How fast before you stop falling?”</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Every learning path, lesson quiz and review card</span></li></ul>
+        </div>
+        <div class="plan full">
+          <h3>Full Version</h3>
+          <p class="price">$4.99<small>One-time purchase, not a subscription · local prices as shown in the App Store</small></p>
+          <ul class="ticks"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>All 997 entries in 17 domains, in full</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>All 183 diagrams</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>All 25 labs, including 14 advanced simulations</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Family Sharing; buy once for iPhone and iPad</span></li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Restore Purchases on a new device — you won't be charged again</span></li></ul>
+        </div>
+      </div>
+      <p class="always">Always free: learning paths, lesson quizzes, review cards, search, the timeline, indexes, the connections graph, bookmarks and notes — and read-aloud for everything you can read.</p>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <div class="section-head"><h2>Questions<i class="alt" lang="zh-Hans">常见问题</i></h2></div>
+      <div class="list">
+        <details><summary>What do I need?</summary><p>An iPhone or iPad running iOS / iPadOS 26 or later. The interface and text can be English or Chinese, or both side by side.</p></details>
+        <details><summary>Do I need to be online or sign up?</summary><p>No. Everything is inside the app and works offline, with no ads and no data collection. Your learning record stays on your device, and you can export a backup.</p></details>
+        <details><summary>Can I trust the numbers?</summary><p>Every domain comes with a sources and verification record listing where its key numbers and dates come from. If you find a mistake, please tell us.</p></details>
+        <details><summary>I got a new device. Do I keep the Full Version?</summary><p>Yes. Sign in with the same Apple Account and tap Settings → Full Version → Restore Purchases. Members of your Family Sharing group can use it too.</p></details>
+      </div>
+      <p class="more">More answers on the <a href="https://teancum.me/nowisee-support/">support page</a>, or email <a href="mailto:dongxiyunei@gmail.com">dongxiyunei@gmail.com</a></p>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap">
+      <img class="icon" src="../icon-192.png" width="96" height="96" alt="Now I See app icon" loading="lazy">
+      <h2>Three centuries of invention, in your pocket<i class="alt" lang="zh-Hans">把三百年的发明装进口袋</i></h2>
+      <div class="cta">
+        <a class="btn btn-primary" data-store href="https://apps.apple.com/app/id6826121062"><span class="store-label">Free on the App Store</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Teancum Tian · Now I See · An Illustrated Encyclopedia of Modern Technology</p>
+    <nav aria-label="Footer"><a href="https://teancum.me/nowisee-support/">Support</a><a href="https://teancum.me/nowisee-support/privacy.html">Privacy</a><a href="https://teancum.me/nowisee-support/terms.html">Terms</a><a href="mailto:dongxiyunei@gmail.com">Contact</a></nav>
+  </div>
+</footer>
+
+<script>
+  const bar = document.getElementById('bar');
+  addEventListener('scroll', () => bar.classList.toggle('scrolled', scrollY > 8), { passive: true });
+  document.querySelectorAll('[data-lang]').forEach(a => a.addEventListener('click', () => {
+    try { localStorage.setItem('nis.lang', a.dataset.lang); } catch (e) {}
+  }));
+  // 还没上架时 App Store 查不到这个 App：按钮改成「即将上架」，上架以后自动变回下载链接
+  function nisLookup(r) {
+    if (r && r.resultCount > 0) return;
+    document.querySelectorAll('[data-store]').forEach(a => {
+      a.classList.add('soon');
+      a.removeAttribute('href');
+      a.querySelector('.store-label').textContent = a.dataset.soon || 'Coming soon to the App Store';
+    });
+  }
+</script>
+<script src="https://itunes.apple.com/lookup?id=6826121062&callback=nisLookup" async></script>
+</body>
+</html>
